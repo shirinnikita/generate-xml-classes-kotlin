@@ -1,0 +1,19 @@
+package xmlorm
+
+
+import com.fasterxml.jackson.annotation.JsonProperty
+
+{% for class in classes %}
+data class {{class.name}}(
+    {%- set comma = joiner(",") -%}
+    {% for attr in class.attrs%}
+    {{ comma() }}@set:JsonProperty("{{attr.name}}")
+    {%- if attr.type.startswith('List') %}
+    var {{attr.name.capitalize()}}s : {{attr.type}} = ArrayList()
+    {%- else %}
+    var {{attr.name.capitalize()}} : {{attr.type}} ?= null
+    {%- endif %}
+    {%- endfor %}
+)
+
+{% endfor %}
